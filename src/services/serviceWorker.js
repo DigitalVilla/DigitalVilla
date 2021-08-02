@@ -103,7 +103,7 @@ export default (() => {
           registration.unregister()
         })
         .catch((err) => {
-          console.log(err)
+          // console.log(err)
         })
     }
   }

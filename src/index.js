@@ -7,7 +7,7 @@ import './app/scss/main.scss'
 console.clear()
 const start = String.fromCodePoint(0x2660)
 console.log(
-  `%c${start + start} Digital Villa ${start + start} %c${'2.3'} `,
+  `%c${start + start} Digital Villa ${start + start} %c${'2.4'} `,
   `color:${'purple'}`,
   `color:${'Navy'}`
 )

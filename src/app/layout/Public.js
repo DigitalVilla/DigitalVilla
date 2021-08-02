@@ -2,14 +2,13 @@ import React from 'react'
 import Slide from '../components/Slide.js'
 
 export default React.memo(function Public(props) {
-  // console.log("** Page: Public **");
   const slides = [
     {
       image: 'https://assets.digitalvilla.ca/pages/mac-rainbow.jpg',
       title: 'Professional Work',
       dek: {
         top: [
-          'Latest projects developed',
+          'Highlight projects for',
           <>
             for <a href="https://quantifi.ca">Quantifi</a>,{' '}
             <a href="https://thearcane.com">The Arcane</a>
@@ -20,8 +19,8 @@ export default React.memo(function Public(props) {
         ],
         bottom: [
           'Applied Technologies:',
-          'AWS, NodeJS, Ruby, React,',
-          'Angular, PHP, & WordPress',
+          'Typescript, React (DOM/Native),',
+          'AWS, NodeJS, Ruby, Angular & PHP',
         ],
       },
     },
@@ -31,11 +30,11 @@ export default React.memo(function Public(props) {
       link: 'https://quantifi.ca',
       dek: {
         top: [
-          'Calgary based tech-company',
+          'Calgary based Fintech company',
           'Helping customers to better assess',
           'and manage consumer credit risk',
         ],
-        bottom: ['AWS ecosystem development', 'Serverless Lambda development'],
+        bottom: ['AWS ecosystem deployment', 'Serverless Lambda development'],
       },
     },
     {

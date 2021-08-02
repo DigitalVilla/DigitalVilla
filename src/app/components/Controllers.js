@@ -4,81 +4,74 @@ import OfflineIcon from './OfflineIcon'
 import Menu from './Menu'
 
 export default class Controllers extends Component {
-	constructor(props) {
-		super(props)
-		this.page = ''
-		this.count = 1
-		this.state = {
-			isContactOpen: false,
-			isMenuOpen: false,
-		}
-	}
+  constructor(props) {
+    super(props)
+    this.page = ''
+    this.count = 1
+    this.state = {
+      isContactOpen: false,
+      isMenuOpen: false,
+    }
+  }
 
-	componentDidMount() {
-		const setView = setViewSize()
-		// this.props.api.reloadView = setView;
+  componentDidMount() {
+    const setView = setViewSize()
 
-		setView();
-		window.addEventListener('resize', () => {
-			// console.log("REZISE");
-			setView();
-			//Toodo update state
-		});
-	}
-	componentDidUpdate() {
+    setView()
+    window.addEventListener('resize', () => {
+      setView()
+    })
 
-	}
+    if (!window.location.hash || window.location.hash === '#Home') {
+      this.toggleMenu()
+    }
+  }
+  componentDidUpdate() {}
 
-	shouldComponentUpdate(prevProps, prevState) {
-		const { isMenuOpen, isContactOpen } = this.state
-		const { api, fpState } = this.props
+  shouldComponentUpdate(prevProps, prevState) {
+    const { isMenuOpen, isContactOpen } = this.state
+    const { api, fpState } = this.props
 
-		if (isMenuOpen && fpState.lastEvent === "onLeave") {
-			const currentPage = api.getActiveSection().anchor
-			// console.log(fpState.lastEvent === "afterLoad" && this.count++);
+    if (isMenuOpen && fpState.lastEvent === 'onLeave') {
+      const currentPage = api.getActiveSection().anchor
+      // console.log(fpState.lastEvent === "afterLoad" && this.count++);
 
-			// Close the menu when scroll happens 
-			if (this.page !== currentPage) {
-				this.page = currentPage;
-				this.toggleMenu();
-				this.autoCalled = true
-			}
-		}
+      // Close the menu when scroll happens
+      if (this.page !== currentPage) {
+        this.page = currentPage
+        this.toggleMenu()
+        this.autoCalled = true
+      }
+    }
 
-			return prevState.isMenuOpen !== isMenuOpen ||
-			prevState.isContactOpen !== isContactOpen
-	}
+    return (
+      prevState.isMenuOpen !== isMenuOpen ||
+      prevState.isContactOpen !== isContactOpen
+    )
+  }
 
-	toggleMenu = () => {
-		// console.log('toggleMenu');
+  toggleMenu = () => {
+    this.setState((prevState) => ({
+      isMenuOpen: !prevState.isMenuOpen,
+      isContactOpen: false,
+    }))
+  }
 
-		this.setState((prevState) => ({
-			isMenuOpen: !prevState.isMenuOpen,
-			isContactOpen: false
-		}))
-	}
+  toggleContact = () => {
+    this.setState((prevState) => ({
+      isContactOpen: !prevState.isContactOpen,
+      isMenuOpen: false,
+    }))
+  }
 
-	toggleContact = () => {
-		this.setState((prevState) => ({
-			isContactOpen: !prevState.isContactOpen,
-			isMenuOpen: false
-		}))
-	}
+  render() {
+    const { isMenuOpen } = this.state
 
-	handleLink = (a) => {
-		window.location.href = a;
-	}
-
-	render() {
-		const {  isMenuOpen } = this.state
-
-		// console.log('Controller: ', lastEvent);
-		return (
-			<>
-				<OfflineIcon />
-				<Menu toggleMenu={this.toggleMenu} isOpen={isMenuOpen} />
-				{/* <ContactBox toggleContact={this.toggleContact} isOpen={isContactOpen} /> */}
-			</>
-		)
-	}
+    return (
+      <>
+        <OfflineIcon />
+        <Menu toggleMenu={this.toggleMenu} isOpen={isMenuOpen} />
+      </>
+    )
+  }
 }

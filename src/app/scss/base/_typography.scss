@@ -1,189 +1,145 @@
 .Title {
-	font-size: var(--font-xxl);
-	color: var(--white);
-	letter-spacing: 0.1em;
-	font-weight: 300;
-	text-shadow: var(--darkShadow);
-	text-transform: uppercase;
-	line-height: 1;
+  font-size: var(--font-xxl);
+  color: var(--white);
+  letter-spacing: 0.1em;
+  font-weight: 300;
+  text-shadow: var(--darkShadow);
+  text-transform: uppercase;
+  line-height: 1;
 }
 
 a {
-	color: inherit;
+  color: inherit;
 
-	&:hover {
-		color: $brand1;
-		text-shadow: none;
-	}
+  &:hover {
+    color: $brand1;
+    text-shadow: none;
+  }
 }
 
 svg {
-	fill: var(--font-color);
+  fill: var(--font-color);
 }
 
 .svg-lg {
-	svg {
-		height: var(--space-xxl);
-		width: var(--space-xxl);
-	}
+  svg {
+    height: var(--space-xxl);
+    width: var(--space-xxl);
+  }
 }
 
 .svg-md {
-	svg {
-		height: var(--space-xl);
-		width: var(--space-xl);
-	}
+  svg {
+    height: var(--space-xl);
+    width: var(--space-xl);
+  }
 }
 
 .svg-sm {
-	svg {
-		height: var(--space-lg);
-		width: var(--space-lg);
-	}
+  svg {
+    height: var(--space-lg);
+    width: var(--space-lg);
+  }
 }
 
 .icon_BTN,
 .icon_BTN:focus,
 .icon_BTN:hover,
 .icon_BTN:active {
-	cursor: pointer;
-	border: none;
-	margin: 0;
-	padding: 0;
-	background: transparent;
-	outline: none;
+  cursor: pointer;
+  border: none;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  outline: none;
 }
 
 .btn {
-	color: #fff;
-	background: transparent;
-	padding: var(--space-sm) var(--space-lg);
-	border: 2px solid white;
-	border-radius: 5px;
-	font-size: var(--font-sm);
-	text-transform: uppercase;
-	letter-spacing: 2px;
-	transition: all .2s;
-	text-decoration: none;
-	position: relative;
+  color: #fff;
+  background: transparent;
+  padding: var(--space-sm) var(--space-lg);
+  border: 2px solid white;
+  border-radius: 6px;
+  font-size: var(--font-sm);
+  text-transform: capitalize;
+  transition: all 0.2s;
+  text-decoration: none;
+  position: relative;
 
-	&:hover {
-		color: var(--brand4);
-		background: #eee;
-		border-color: transparent;
-	}
+  &:hover {
+    color: var(--brand4);
+    background: #eee;
+    border-color: transparent;
+  }
 
-	@media screen and (min-height: $screen-sm) {
-		font-size: var(--font);
-	}
+  @media screen and (min-height: $screen-sm) {
+    font-size: var(--font);
+  }
 }
 
 .link {
-	font-style: italic;
-	border-bottom: 2px solid #fff;
+  font-style: italic;
+  border-bottom: 2px solid #fff;
 }
-
-// *:focus {
-//   outline: none !important;
-// }
-
-// button::-moz-focus-inner {
-//   border: 0;
-// }
 
 .noSelect {
-	-webkit-touch-callout: none;
-	/* iOS Safari */
-	-webkit-user-select: none;
-	/* Safari */
-	-khtml-user-select: none;
-	/* Konqueror HTML */
-	-moz-user-select: none;
-	/* Firefox */
-	-ms-user-select: none;
-	/* Internet Explorer/Edge */
-	user-select: none;
-	/* Non-prefixed version, currently supported by Chrome and Opera */
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
-
 @function strip-unit($value) {
-	@return $value / ($value * 0 + 1);
+  @return $value / ($value * 0 + 1);
 }
 
 @mixin fluid-type($min-vw, $max-vw, $min-font-size, $max-font-size) {
-	$u1: unit($min-vw);
-	$u2: unit($max-vw);
-	$u3: unit($min-font-size);
-	$u4: unit($max-font-size);
+  $u1: unit($min-vw);
+  $u2: unit($max-vw);
+  $u3: unit($min-font-size);
+  $u4: unit($max-font-size);
 
-	@if $u1==$u2 and $u1==$u3 and $u1==$u4 {
-		& {
-			font-size: $min-font-size;
+  @if $u1==$u2 and $u1==$u3 and $u1==$u4 {
+    & {
+      font-size: $min-font-size;
 
-			@media screen and (min-width: $min-vw) {
-				font-size: calc(#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}));
-			}
+      @media screen and (min-width: $min-vw) {
+        font-size: calc(
+          #{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} *
+            ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)})
+        );
+      }
 
-			@media screen and (min-width: $max-vw) {
-				font-size: $max-font-size;
-			}
-		}
-	}
+      @media screen and (min-width: $max-vw) {
+        font-size: $max-font-size;
+      }
+    }
+  }
 }
 
 ::selection {
-	background: rgba($brand2, 0.4);
-	/* WebKit/Blink Browsers */
-	color: white;
+  background: rgba($brand2, 0.4);
+  /* WebKit/Blink Browsers */
+  color: white;
 }
 
 ::-moz-selection {
-	background: rgba($brand2, 0.4);
-	/* Gecko Browsers */
-	color: white;
+  background: rgba($brand2, 0.4);
+  /* Gecko Browsers */
+  color: white;
 }
 
 /* Animation */
 @keyframes rotate {
-	to {
-	  transform: rotate(360deg);
-	}
+  to {
+    transform: rotate(360deg);
   }
-  
-  /* Variables */
-//   $loader-size: 100px;
-  
-  /* Loading Icon */
-  .loading {
-	// width: $loader-size;
-	// height: $loader-size;
-  
-	&__ring {
-	//   position: absolute;
-	//   width: $loader-size;
-	//   height: $loader-size;
-	  
-	//   &:first-child {
-	// 	transform: skew(30deg,20deg);
-	//   }
-  
-	//   &:last-child {
-	// 	transform: skew(-30deg,-20deg) scale(-1, 1);
-  
-	// 	svg {
-	// 	  animation-delay: -0.5s;
-	// 	}
-	//   }
-  
-	  svg {
-		// border: 10px solid rgba(185, 185, 185, 0.24);
-		// border-radius: 40%;
-		// animation: rotate 1s linear infinite;
-		// opacity: 0.8;
-
-		// fill: rgba(196, 20, 20, 0.61);
-	  }
-	}
-  }
-  
+}

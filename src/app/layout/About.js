@@ -12,16 +12,17 @@ export default React.memo(function About(props) {
         <div className="dek">
           <h2 className="neo-text">Business Solutions</h2>
           <p className="first">
-            DigitalVilla is a full Service Software Shop with a special focus on
-            Serverless Web and Mobile Development. Our main focus is to enhance
-            your tech stack so you can keep growing just by doing what you do
-            best and without distractions!.
+            Digital Villa is a "Full Service Software Shop" with a special focus
+            on Serverless, Web, and Mobile Development. Weather in office or
+            remotely, our commitment is to help you grow by focusing on what you
+            do best and leaving the technology part to us.
           </p>
           <p className="last">
-            Whether as a subcontractor or an in-house developer, DigitalVilla
-            can help you develop full-stack applications, Utilize AWS services
-            to optimize existing sites or even transition a slow WordPress site
-            to a blazing fast Serverless architecture.
+            I am Omar, the Senior Fullstack Engineer behind Digital Villa. With
+            a proven track record of increasing ROI by improving development and
+            deployment processes, mentoring peer developers and designing modern
+            architectures through AWS. I am confident we will create great
+            things together.
           </p>
         </div>
       </div>
