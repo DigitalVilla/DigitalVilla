@@ -1,30 +1,30 @@
 import React from 'react'
 import Icon from './Icons'
 
+const buttons = [
+  {
+    link: 'https://www.linkedin.com/in/digitalvilla/',
+    icon: 'linkedin',
+  },
+  {
+    link: 'https://github.com/DigitalVilla',
+    icon: 'github',
+  },
+  {
+    link: 'https://codepen.io/DigitalVilla',
+    icon: 'codepen',
+  },
+  {
+    link: 'https://assets.digitalvilla.ca/files/Resume.pdf',
+    icon: 'resume',
+  },
+]
+
 const Menu = (props) => {
   const handleLink = ({ currentTarget }) => {
     const url = currentTarget.getAttribute('data-url')
     window.open(url, '_blank')
   }
-
-  let buttons = [
-    {
-      link: 'https://www.linkedin.com/in/digitalvilla/',
-      icon: 'linkedin',
-    },
-    {
-      link: 'https://github.com/DigitalVilla',
-      icon: 'github',
-    },
-    {
-      link: 'https://codepen.io/DigitalVilla',
-      icon: 'codepen',
-    },
-    {
-      link: 'https://assets.digitalvilla.ca/files/Resume.pdf',
-      icon: 'resume',
-    },
-  ]
 
   return (
     <>

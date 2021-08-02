@@ -4,14 +4,19 @@ import App from './app/pages/index'
 import SW from './services/serviceWorker'
 import './app/scss/main.scss'
 
-console.clear()
-const start = String.fromCodePoint(0x2660)
-console.log(
-  `%c${start + start} Digital Villa ${start + start} %c${'2.4'} `,
-  `color:${'purple'}`,
-  `color:${'Navy'}`
-)
-
 ReactDOM.render(<App />, document.getElementById('root'))
 SW.unregister()
 // SW.register();
+
+console.clear()
+// prettier-ignore
+console.log(`%c
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+█ ▄▄▀█▄ ▄█ ▄▄▄█▄ ▄█▄ ▄█ ▄▄▀█ ████ ███ █▄ ▄█ ███ ███ ▄▄▀█
+█ ██ ██ ██ █▄ ██ ███ ██ ▀▀ █ █████ ▀ ███ ██ ███ ███ ▀▀ █
+█▄▄▄██▄▄▄█▄▄▄▄█▄▄▄██▄██▄██▄█▄▄▄████▄███▄▄▄█▄▄▄█▄▄▄█▄██▄█`,'color:cyan')
+const start = String.fromCodePoint(0x2660)
+console.log(
+  `%c${start + start} Version 2.4 ${start + start} `,
+  `color:${'cyan'}`
+)
