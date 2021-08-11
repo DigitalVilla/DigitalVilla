@@ -12,17 +12,17 @@ export default React.memo(function About(props) {
         <div className="dek">
           <h2 className="neo-text">Business Solutions</h2>
           <p className="first">
-            Digital Villa is a "Full Service Software Shop" with a special focus
-            on Serverless, Web, and Mobile Development. Weather in office or
-            remotely, our commitment is to help you grow by focusing on what you
+            I am Omar, the Senior Engineer behind Digital Villa; a "Full-stack
+            Software Shop for Web, and Mobile Development". Whether in office or
+            remotely, my commitment is to help you grow by focusing on what you
             do best and leaving the technology part to us.
           </p>
           <p className="last">
-            I am Omar, the Senior Fullstack Engineer behind Digital Villa. With
-            a proven track record of increasing ROI by improving development and
-            deployment processes, mentoring peer developers and designing modern
-            architectures through AWS. I am confident we will create great
-            things together.
+            <br />
+            With a proven track record of increasing ROI by improving
+            development / deployment processes. training junior developers and
+            designing modern architectures through AWS; I am confident we will
+            create great things together.
           </p>
         </div>
       </div>

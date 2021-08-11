@@ -24,7 +24,7 @@ const BusinessCard = ({ className = '' }) => {
           <h2>
             OMAR <span>VILLANUEVA</span>
           </h2>
-          <h3>Senior Full-Stack Engineer</h3>
+          <h3>Senior Full-stack Engineer</h3>
         </div>
 
         <div className="bottom">

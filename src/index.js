@@ -14,9 +14,6 @@ console.log(`%c
 ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 █ ▄▄▀█▄ ▄█ ▄▄▄█▄ ▄█▄ ▄█ ▄▄▀█ ████ ███ █▄ ▄█ ███ ███ ▄▄▀█
 █ ██ ██ ██ █▄ ██ ███ ██ ▀▀ █ █████ ▀ ███ ██ ███ ███ ▀▀ █
-█▄▄▄██▄▄▄█▄▄▄▄█▄▄▄██▄██▄██▄█▄▄▄████▄███▄▄▄█▄▄▄█▄▄▄█▄██▄█`,'color:cyan')
+█▄▄▄██▄▄▄█▄▄▄▄█▄▄▄██▄██▄██▄█▄▄▄████▄███▄▄▄█▄▄▄█▄▄▄█▄██▄█`,'color:#e26fff')
 const start = String.fromCodePoint(0x2660)
-console.log(
-  `%c${start + start} Version 2.4 ${start + start} `,
-  `color:${'cyan'}`
-)
+console.log(`%c${start + start} Version 2.4 ${start + start} `, `color:#e26fff`)
