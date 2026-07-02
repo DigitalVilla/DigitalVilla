@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#05060a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+
+    <title>Digital Villa — Full-Stack Software Engineering Studio</title>
+    <meta
+      name="description"
+      content="Digital Villa is a full-stack software studio building serverless web & mobile products — trusted by Fortune 500 and global brands including lululemon, Panasonic, and CPKC."
+    />
+    <link rel="canonical" href="https://www.digitalvilla.ca/" />
+    <meta name="author" content="Digital Villa" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Digital Villa" />
+    <meta property="og:title" content="Digital Villa — Full-Stack Software Engineering Studio" />
+    <meta
+      property="og:description"
+      content="Premium serverless web & mobile products, engineered end-to-end. Trusted by Fortune 500 and global brands."
+    />
+    <meta property="og:url" content="https://www.digitalvilla.ca/" />
+    <meta property="og:image" content="https://assets.digitalvilla.ca/images/nebula-lg.jpg" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Digital Villa — Full-Stack Software Engineering Studio" />
+    <meta
+      name="twitter:description"
+      content="Premium serverless web & mobile products, engineered end-to-end. Trusted by Fortune 500 and global brands."
+    />
+    <meta name="twitter:image" content="https://assets.digitalvilla.ca/images/nebula-lg.jpg" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://assets.digitalvilla.ca" crossorigin />
+
+    <!-- PWA -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Digital Villa" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Digital Villa",
+        "url": "https://www.digitalvilla.ca",
+        "description": "Full-stack software engineering studio building serverless web & mobile products, trusted by Fortune 500 and global brands.",
+        "email": "digitalvilla01@gmail.com",
+        "telephone": "+1-587-887-8781",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Calgary",
+          "addressRegion": "Alberta",
+          "addressCountry": "Canada"
+        }
+      }
+    </script>
+
+    <!-- Prevent theme flash: apply persisted/system theme before paint -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('dv-theme')
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          var theme = stored || (prefersDark ? 'dark' : 'light')
+          var root = document.documentElement
+          root.classList.toggle('dark', theme === 'dark')
+          root.classList.toggle('light', theme === 'light')
+          root.style.colorScheme = theme
+        } catch (e) {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
