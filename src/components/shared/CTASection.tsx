@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import { MagneticButton } from '@/components/ui/MagneticButton'
 import { PremiumButton } from '@/components/ui/PremiumButton'
 import { Aurora } from '@/components/ui/Aurora'
 import { fadeUp, staggerContainer, viewportOnce } from '@/lib/motion'
@@ -41,11 +40,11 @@ export function CTASection({
           variants={fadeUp}
           className="mt-9 flex flex-wrap items-center justify-center gap-3"
         >
-          <MagneticButton to="/contact">
+          <PremiumButton as="link" to="/contact" variant="accent" size="lg">
             Start a project
-            <ArrowRight className="size-4" />
-          </MagneticButton>
-          <PremiumButton as="link" to="/work" variant="secondary">
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+          </PremiumButton>
+          <PremiumButton as="link" to="/work" variant="secondary" size="lg">
             See our work
           </PremiumButton>
         </motion.div>

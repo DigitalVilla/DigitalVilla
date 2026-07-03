@@ -64,13 +64,12 @@
       }
     </script>
 
-    <!-- Prevent theme flash: apply persisted/system theme before paint -->
+    <!-- Prevent theme flash: apply persisted theme before paint (dark by default) -->
     <script>
       (function () {
         try {
           var stored = localStorage.getItem('dv-theme')
-          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-          var theme = stored || (prefersDark ? 'dark' : 'light')
+          var theme = stored === 'light' ? 'light' : 'dark'
           var root = document.documentElement
           root.classList.toggle('dark', theme === 'dark')
           root.classList.toggle('light', theme === 'light')

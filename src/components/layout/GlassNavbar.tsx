@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { navLinks, site } from '@/data/site'
 import { Logo } from './Logo'
 import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher'
 import { PremiumButton } from '@/components/ui/PremiumButton'
+import { Aurora } from '@/components/ui/Aurora'
 import { cn } from '@/lib/utils'
+
+const spring = { type: 'spring', stiffness: 400, damping: 28 } as const
 
 export function GlassNavbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -44,7 +47,7 @@ export function GlassNavbar() {
             className="flex items-center pl-1"
             aria-label={`${site.name} home`}
           >
-            <Logo />
+            <Logo wordmarkClassName="hidden sm:inline" />
           </Link>
 
           <ul className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-1 md:flex">
@@ -80,7 +83,7 @@ export function GlassNavbar() {
 
           <div className="flex items-center gap-2">
             <ThemeSwitcher />
-            <PremiumButton as="link" to="/contact" size="sm" className="hidden md:inline-flex">
+            <PremiumButton as="link" to="/contact" variant="accent" size="sm" className="hidden md:inline-flex">
               Start a project
             </PremiumButton>
             <button
@@ -88,9 +91,25 @@ export function GlassNavbar() {
               onClick={() => setOpen((o) => !o)}
               aria-label={open ? 'Close menu' : 'Open menu'}
               aria-expanded={open}
-              className="grid size-10 place-items-center rounded-full border border-border bg-surface/50 text-foreground md:hidden"
+              className="relative grid size-10 place-items-center rounded-full border border-border bg-surface/50 text-foreground transition-colors hover:border-accent md:hidden"
             >
-              {open ? <X className="size-5" /> : <Menu className="size-5" />}
+              <span className="relative block h-3.5 w-5" aria-hidden>
+                <motion.span
+                  className="absolute left-0 top-1/2 h-0.5 w-full -mt-px rounded-full bg-current"
+                  animate={open ? { y: 0, rotate: 45 } : { y: -5, rotate: 0 }}
+                  transition={spring}
+                />
+                <motion.span
+                  className="absolute left-0 top-1/2 h-0.5 w-full -mt-px rounded-full bg-current"
+                  animate={open ? { opacity: 0, scaleX: 0.3 } : { opacity: 1, scaleX: 1 }}
+                  transition={{ duration: 0.15 }}
+                />
+                <motion.span
+                  className="absolute left-0 top-1/2 h-0.5 w-full -mt-px rounded-full bg-current"
+                  animate={open ? { y: 0, rotate: -45 } : { y: 5, rotate: 0 }}
+                  transition={spring}
+                />
+              </span>
             </button>
           </div>
         </motion.nav>
@@ -102,34 +121,71 @@ export function GlassNavbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 top-0 z-40 flex flex-col bg-background/95 px-6 pt-28 backdrop-blur-xl md:hidden"
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-40 flex flex-col overflow-hidden bg-background/90 backdrop-blur-2xl md:hidden"
           >
-            <ul className="flex flex-col gap-1">
-              {navLinks.map((link, i) => (
-                <motion.li
-                  key={link.to}
-                  initial={{ opacity: 0, x: -24 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.06 * i + 0.1, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <NavLink
-                    to={link.to}
-                    className={({ isActive }) =>
-                      cn(
-                        'block border-b border-border py-5 font-display text-3xl font-medium tracking-tight transition-colors',
-                        isActive ? 'text-foreground' : 'text-muted'
-                      )
-                    }
+            <Aurora className="opacity-50" />
+
+            <div className="flex flex-1 flex-col px-6 pb-10 pt-28">
+              <nav className="flex flex-col">
+                {navLinks.map((link, i) => (
+                  <motion.div
+                    key={link.to}
+                    initial={{ opacity: 0, y: 22 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.07 * i + 0.12, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    {link.label}
-                  </NavLink>
-                </motion.li>
-              ))}
-            </ul>
-            <PremiumButton as="link" to="/contact" size="lg" className="mt-8 w-full">
-              Start a project
-            </PremiumButton>
+                    <NavLink
+                      to={link.to}
+                      className={({ isActive }) =>
+                        cn(
+                          'group flex items-center justify-between border-b border-border py-5 transition-colors',
+                          isActive ? 'text-foreground' : 'text-muted'
+                        )
+                      }
+                    >
+                      <span className="flex items-baseline gap-4">
+                        <span className="font-mono text-xs font-medium text-accent">
+                          0{i + 1}
+                        </span>
+                        <span className="font-display text-4xl font-medium tracking-tight">
+                          {link.label}
+                        </span>
+                      </span>
+                      <ArrowUpRight className="size-6 text-subtle transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-foreground" />
+                    </NavLink>
+                  </motion.div>
+                ))}
+              </nav>
+
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.07 * navLinks.length + 0.18, ease: [0.16, 1, 0.3, 1] }}
+                className="mt-auto space-y-7 pt-12"
+              >
+                <PremiumButton as="link" to="/contact" variant="accent" size="lg" className="w-full">
+                  Start a project
+                  <ArrowRight className="size-4" />
+                </PremiumButton>
+
+                <div className="flex flex-col gap-2 text-sm">
+                  <a
+                    href={`mailto:${site.email}`}
+                    className="w-fit text-muted transition-colors hover:text-foreground"
+                  >
+                    {site.email}
+                  </a>
+                  <a
+                    href="tel:+15878878781"
+                    className="w-fit text-muted transition-colors hover:text-foreground"
+                  >
+                    {site.phone}
+                  </a>
+                  <span className="text-subtle">{site.location}</span>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

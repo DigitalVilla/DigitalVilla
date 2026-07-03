@@ -14,21 +14,21 @@ export function Aurora({ className }: { className?: string }) {
       )}
     >
       <div
-        className="animate-aurora absolute -top-1/3 left-1/4 size-[55vw] max-w-3xl rounded-full opacity-60 blur-[100px]"
+        className="animate-drift-a absolute -top-1/4 left-1/5 size-[55vw] max-w-3xl rounded-full opacity-60 blur-[64px] md:blur-[100px]"
         style={{
           background:
             'radial-gradient(circle at center, var(--accent) 0%, transparent 70%)',
         }}
       />
       <div
-        className="animate-aurora absolute top-1/4 right-1/5 size-[45vw] max-w-2xl rounded-full opacity-50 blur-[110px] [animation-delay:-6s]"
+        className="animate-drift-b absolute top-1/5 right-1/6 size-[45vw] max-w-2xl rounded-full opacity-50 blur-[64px] md:blur-[110px] [animation-delay:-8s]"
         style={{
           background:
             'radial-gradient(circle at center, var(--accent-2) 0%, transparent 70%)',
         }}
       />
       <div
-        className="animate-aurora absolute -bottom-1/4 left-1/3 size-[40vw] max-w-xl rounded-full opacity-40 blur-[120px] [animation-delay:-12s]"
+        className="animate-drift-c absolute -bottom-1/5 left-1/3 size-[40vw] max-w-xl rounded-full opacity-40 blur-[72px] md:blur-[120px] [animation-delay:-5s]"
         style={{
           background:
             'radial-gradient(circle at center, var(--accent) 0%, transparent 70%)',

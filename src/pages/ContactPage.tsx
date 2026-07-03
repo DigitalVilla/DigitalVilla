@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Mail, Phone, MapPin, Check, Send } from 'lucide-react'
 import { Seo } from '@/components/seo/Seo'
@@ -27,6 +27,11 @@ export default function ContactPage() {
   const [errors, setErrors] = useState<Partial<FormState>>({})
   const [sent, setSent] = useState(false)
 
+  // Bot defences: a honeypot field humans never see, and the time the form
+  // was first rendered (bots submit near-instantly).
+  const [honeypot, setHoneypot] = useState('')
+  const renderedAt = useRef(Date.now())
+
   function validate(): boolean {
     const next: Partial<FormState> = {}
     if (!form.name.trim()) next.name = 'Please enter your name.'
@@ -40,6 +45,16 @@ export default function ContactPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+
+    // If the honeypot is filled, or the form was submitted implausibly fast,
+    // treat it as a bot: show the success state but send nothing.
+    const tooFast = Date.now() - renderedAt.current < 2000
+    if (honeypot.trim() !== '' || tooFast) {
+      setSent(true)
+      setForm(empty)
+      return
+    }
+
     if (!validate()) return
     // No backend in this build — compose a mailto so the message is never lost.
     const subject = encodeURIComponent(`New project enquiry — ${form.name}`)
@@ -168,7 +183,11 @@ export default function ContactPage() {
                   <PremiumButton
                     variant="secondary"
                     className="mt-6"
-                    onClick={() => setSent(false)}
+                    onClick={() => {
+                      setHoneypot('')
+                      renderedAt.current = Date.now()
+                      setSent(false)
+                    }}
                   >
                     Send another
                   </PremiumButton>
@@ -182,6 +201,29 @@ export default function ContactPage() {
                   noValidate
                   className="grid gap-5"
                 >
+                  {/* Honeypot — hidden from humans, irresistible to bots. */}
+                  <div
+                    aria-hidden
+                    style={{
+                      position: 'absolute',
+                      left: '-9999px',
+                      width: 1,
+                      height: 1,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <label htmlFor="dv-website">Website</label>
+                    <input
+                      id="dv-website"
+                      name="website"
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={honeypot}
+                      onChange={(e) => setHoneypot(e.target.value)}
+                    />
+                  </div>
+
                   <div className="grid gap-5 sm:grid-cols-2">
                     <Field
                       label="Name"

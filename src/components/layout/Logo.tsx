@@ -6,6 +6,8 @@ interface LogoProps {
   showWordmark?: boolean
   className?: string
   markClassName?: string
+  /** Extra classes on the wordmark — e.g. to hide it responsively. */
+  wordmarkClassName?: string
 }
 
 /**
@@ -16,9 +18,10 @@ export function Logo({
   showWordmark = true,
   className,
   markClassName,
+  wordmarkClassName,
 }: LogoProps) {
   return (
-    <span className={cn('flex items-center gap-2.5', className)}>
+    <span className={cn('flex items-center gap-2', className)}>
       <img
         src="/logo_DV.png"
         alt=""
@@ -26,12 +29,17 @@ export function Logo({
         height={315}
         decoding="async"
         className={cn(
-          'h-7 w-auto object-contain invert dark:invert-0',
+          'h-6 w-auto object-contain invert dark:invert-0',
           markClassName
         )}
       />
       {showWordmark && (
-        <span className="font-display text-[1.05rem] font-semibold tracking-tight">
+        <span
+          className={cn(
+            'font-display text-base font-semibold tracking-tight',
+            wordmarkClassName
+          )}
+        >
           {site.name}
         </span>
       )}

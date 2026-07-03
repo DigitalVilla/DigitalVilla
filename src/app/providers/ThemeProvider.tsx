@@ -7,10 +7,8 @@ const STORAGE_KEY = 'dv-theme'
 function getInitialTheme(): Theme {
   if (typeof window === 'undefined') return 'dark'
   const stored = localStorage.getItem(STORAGE_KEY) as Theme | null
-  if (stored === 'dark' || stored === 'light') return stored
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light'
+  // Dark by default — only honour an explicit stored preference.
+  return stored === 'light' ? 'light' : 'dark'
 }
 
 function applyTheme(theme: Theme) {
