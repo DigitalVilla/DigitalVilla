@@ -8,7 +8,7 @@ import { PremiumButton } from '@/components/ui/PremiumButton'
 import { CTASection } from '@/components/shared/CTASection'
 import { AnimatedSection, AnimatedItem } from '@/components/ui/AnimatedSection'
 import { projects, getProject } from '@/data/projects'
-import { fadeUp, easeOutExpo } from '@/lib/motion'
+import { fadeUp, easeOutExpo, viewportOnce } from '@/lib/motion'
 
 export default function ProjectPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -87,6 +87,7 @@ export default function ProjectPage() {
             className="mt-12"
           >
             <SmartImage
+              priority
               src={project.image}
               alt={`${project.name} — ${project.tagline}`}
               tone={project.accent}
@@ -118,7 +119,7 @@ export default function ProjectPage() {
                   variants={fadeUp}
                   initial="hidden"
                   whileInView="show"
-                  viewport={{ once: true, amount: 0.4 }}
+                  viewport={viewportOnce}
                 >
                   <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
                     {s.label}

@@ -6,7 +6,7 @@ type Variant = 'primary' | 'accent' | 'secondary' | 'ghost'
 type Size = 'sm' | 'md' | 'lg'
 
 const base =
-  'group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full font-medium tracking-tight transition-all duration-300 ease-[var(--ease-out-expo)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 will-change-transform'
+  'group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full font-medium tracking-tight whitespace-nowrap transition-all duration-300 ease-[var(--ease-out-expo)] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 will-change-transform'
 
 const variants: Record<Variant, string> = {
   primary:
@@ -49,10 +49,7 @@ type ButtonAsAnchor = CommonProps &
     href: string
   }
 
-export type PremiumButtonProps =
-  | ButtonAsButton
-  | ButtonAsLink
-  | ButtonAsAnchor
+export type PremiumButtonProps = ButtonAsButton | ButtonAsLink | ButtonAsAnchor
 
 export const PremiumButton = forwardRef<HTMLElement, PremiumButtonProps>(
   function PremiumButton(props, ref) {

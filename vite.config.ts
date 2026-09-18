@@ -1,83 +1,36 @@
 import { defineConfig } from 'vite'
+import type { Plugin } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import { VitePWA } from 'vite-plugin-pwa'
+import { projects } from './src/data/projects'
+import { navLinks, site } from './src/data/site'
+
+/** Emits /sitemap.xml from the same data that drives the routes. */
+function sitemap(): Plugin {
+  return {
+    name: 'dv:sitemap',
+    apply: 'build',
+    generateBundle() {
+      const paths = [
+        ...navLinks.map((link) => link.to),
+        ...projects.map((project) => `/work/${project.slug}`),
+      ]
+      const entries = paths
+        .map((path) => `  <url><loc>${site.url}${path}</loc></url>`)
+        .join('\n')
+      this.emitFile({
+        type: 'asset',
+        fileName: 'sitemap.xml',
+        source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries}\n</urlset>\n`,
+      })
+    },
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: [
-        'favicon.ico',
-        'apple-touch-icon.png',
-        'logo_DV.png',
-        'robots.txt',
-      ],
-      manifest: {
-        name: 'Digital Villa — Software Engineering Studio',
-        short_name: 'Digital Villa',
-        description:
-          'A full-stack software studio building serverless web & mobile products for ambitious teams.',
-        id: '/',
-        start_url: '/',
-        scope: '/',
-        display: 'standalone',
-        orientation: 'portrait-primary',
-        background_color: '#0B0C12',
-        theme_color: '#0B0C12',
-        lang: 'en',
-        categories: ['business', 'productivity', 'developer'],
-        icons: [
-          {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any',
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any',
-          },
-          {
-            src: 'maskable-icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable',
-          },
-        ],
-      },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        navigateFallback: '/index.html',
-        cleanupOutdatedCaches: true,
-        clientsClaim: true,
-        runtimeCaching: [
-          {
-            // Remote brand assets (images, media) — cache-first with expiry.
-            urlPattern: ({ url }) => url.origin === 'https://assets.digitalvilla.ca',
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'dv-remote-assets',
-              expiration: {
-                maxEntries: 64,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-              },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
-        ],
-      },
-      devOptions: {
-        enabled: false,
-      },
-    }),
-  ],
+  plugins: [react(), tailwindcss(), sitemap()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -88,9 +41,26 @@ export default defineConfig({
     cssCodeSplit: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          react: ['react', 'react-dom', 'react-router-dom'],
-          motion: ['framer-motion'],
+        // Group vendor code into two long-lived chunks so a content deploy
+        // never invalidates them. Matched by path rather than package name so
+        // each package's internal dependencies (react-dom's client build,
+        // framer-motion's motion-dom / motion-utils) land in the same chunk
+        // instead of leaking into the entry bundle.
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined
+          if (
+            /node_modules\/(react|react-dom|scheduler|react-router|react-router-dom)\//.test(
+              id
+            )
+          ) {
+            return 'react'
+          }
+          if (
+            /node_modules\/(framer-motion|motion-dom|motion-utils)\//.test(id)
+          ) {
+            return 'motion'
+          }
+          return undefined
         },
       },
     },

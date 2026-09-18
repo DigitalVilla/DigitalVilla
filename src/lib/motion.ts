@@ -13,17 +13,17 @@ export const springSoft: Transition = {
 
 /** Fade + rise — the workhorse reveal. */
 export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 28 },
+  hidden: { opacity: 0, y: 20 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: easeOutExpo },
+    transition: { duration: 0.55, ease: easeOutExpo },
   },
 }
 
 export const fadeIn: Variants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.8, ease: easeOutExpo } },
+  show: { opacity: 1, transition: { duration: 0.6, ease: easeOutExpo } },
 }
 
 export const scaleIn: Variants = {
@@ -31,7 +31,7 @@ export const scaleIn: Variants = {
   show: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 0.7, ease: easeOutExpo },
+    transition: { duration: 0.55, ease: easeOutExpo },
   },
 }
 
@@ -43,4 +43,14 @@ export const staggerContainer = (stagger = 0.08, delay = 0): Variants => ({
   },
 })
 
-export const viewportOnce = { once: true, amount: 0.3 } as const
+/**
+ * Reveal as soon as the element's top edge is ~12% into the viewport.
+ * Using `amount: 'some'` with a margin (rather than a fraction of the element)
+ * means tall sections — a six-card grid on a phone — start animating when they
+ * arrive instead of once a third of them is already on screen.
+ */
+export const viewportOnce = {
+  once: true,
+  amount: 'some',
+  margin: '0px 0px -12% 0px',
+} as const

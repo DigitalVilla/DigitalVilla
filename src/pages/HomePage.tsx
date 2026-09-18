@@ -41,7 +41,7 @@ export default function HomePage() {
           variants={staggerContainer(0.04)}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, amount: 0.4 }}
+          viewport={viewportOnce}
           className="mx-auto max-w-4xl"
         >
           <motion.p

@@ -5,7 +5,12 @@ import { Seo } from '@/components/seo/Seo'
 import { PageHero } from '@/components/shared/PageHero'
 import { PremiumButton } from '@/components/ui/PremiumButton'
 import { site } from '@/data/site'
-import { fadeUp, staggerContainer, viewportOnce, easeOutExpo } from '@/lib/motion'
+import {
+  fadeUp,
+  staggerContainer,
+  viewportOnce,
+  easeOutExpo,
+} from '@/lib/motion'
 
 interface FormState {
   name: string
@@ -14,18 +19,65 @@ interface FormState {
   message: string
 }
 
+/**
+ * idle    — editing
+ * sending — waiting on /api/contact
+ * sent    — delivered by the endpoint
+ * mailto  — endpoint unavailable; the visitor's mail client was opened instead
+ */
+type Status = 'idle' | 'sending' | 'sent' | 'mailto'
+
 const empty: FormState = { name: '', email: '', company: '', message: '' }
 
 const channels = [
-  { icon: Mail, label: 'Email', value: site.email, href: `mailto:${site.email}` },
+  {
+    icon: Mail,
+    label: 'Email',
+    value: site.email,
+    href: `mailto:${site.email}`,
+  },
   { icon: Phone, label: 'Phone', value: site.phone, href: 'tel:+15878878781' },
   { icon: MapPin, label: 'Location', value: site.location },
 ]
 
+type EndpointResult =
+  | { kind: 'sent' }
+  | { kind: 'invalid'; error: string }
+  | { kind: 'unavailable' }
+
+/**
+ * Posts to the contact Lambda (VITE_CONTACT_ENDPOINT). Anything that isn't a JSON answer — a
+ * host serving index.html for an unknown path, a CORS rejection, a network
+ * failure — counts as "unavailable" so the caller can fall back.
+ */
+async function submitToEndpoint(
+  endpoint: string,
+  payload: FormState & { website: string; startedAt: number }
+): Promise<EndpointResult> {
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+    if (!res.headers.get('content-type')?.includes('application/json')) {
+      return { kind: 'unavailable' }
+    }
+    const data = (await res.json()) as { ok?: boolean; error?: string }
+    if (res.ok && data.ok) return { kind: 'sent' }
+    if (res.status === 400 && data.error)
+      return { kind: 'invalid', error: data.error }
+    return { kind: 'unavailable' }
+  } catch {
+    return { kind: 'unavailable' }
+  }
+}
+
 export default function ContactPage() {
   const [form, setForm] = useState<FormState>(empty)
   const [errors, setErrors] = useState<Partial<FormState>>({})
-  const [sent, setSent] = useState(false)
+  const [formError, setFormError] = useState<string | null>(null)
+  const [status, setStatus] = useState<Status>('idle')
 
   // Bot defences: a honeypot field humans never see, and the time the form
   // was first rendered (bots submit near-instantly).
@@ -43,26 +95,54 @@ export default function ContactPage() {
     return Object.keys(next).length === 0
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-
-    // If the honeypot is filled, or the form was submitted implausibly fast,
-    // treat it as a bot: show the success state but send nothing.
-    const tooFast = Date.now() - renderedAt.current < 2000
-    if (honeypot.trim() !== '' || tooFast) {
-      setSent(true)
-      setForm(empty)
-      return
-    }
-
-    if (!validate()) return
-    // No backend in this build — compose a mailto so the message is never lost.
+  function openMailClient() {
     const subject = encodeURIComponent(`New project enquiry — ${form.name}`)
     const body = encodeURIComponent(
       `Name: ${form.name}\nEmail: ${form.email}\nCompany: ${form.company}\n\n${form.message}`
     )
     window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`
-    setSent(true)
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (status === 'sending') return
+    setFormError(null)
+
+    // If the honeypot is filled, or the form was submitted implausibly fast,
+    // treat it as a bot: show the success state but send nothing.
+    const tooFast = Date.now() - renderedAt.current < 2000
+    if (honeypot.trim() !== '' || tooFast) {
+      setStatus('sent')
+      setForm(empty)
+      return
+    }
+
+    if (!validate()) return
+
+    const endpoint = import.meta.env.VITE_CONTACT_ENDPOINT
+    if (endpoint) {
+      setStatus('sending')
+      const result = await submitToEndpoint(endpoint, {
+        ...form,
+        website: honeypot,
+        startedAt: renderedAt.current,
+      })
+
+      if (result.kind === 'sent') {
+        setStatus('sent')
+        setForm(empty)
+        return
+      }
+      if (result.kind === 'invalid') {
+        setStatus('idle')
+        setFormError(result.error)
+        return
+      }
+    }
+    // No endpoint configured (or it's unreachable): hand the message to the
+    // visitor's mail client so it's never lost.
+    openMailClient()
+    setStatus('mailto')
     setForm(empty)
   }
 
@@ -70,6 +150,15 @@ export default function ContactPage() {
     setForm((f) => ({ ...f, [key]: value }))
     if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }))
   }
+
+  function reset() {
+    setHoneypot('')
+    renderedAt.current = Date.now()
+    setFormError(null)
+    setStatus('idle')
+  }
+
+  const done = status === 'sent' || status === 'mailto'
 
   return (
     <>
@@ -104,8 +193,8 @@ export default function ContactPage() {
               variants={fadeUp}
               className="mt-3 text-pretty leading-relaxed text-muted"
             >
-              No sales funnel, no junior account manager. You speak directly with
-              the people who will build your product.
+              No sales funnel, no junior account manager. You speak directly
+              with the people who will build your product.
             </motion.p>
 
             <motion.ul variants={fadeUp} className="mt-9 space-y-3">
@@ -163,31 +252,31 @@ export default function ContactPage() {
             className="relative rounded-[1.75rem] border border-border bg-surface/50 p-6 md:p-9"
           >
             <AnimatePresence mode="wait">
-              {sent ? (
+              {done ? (
                 <motion.div
                   key="success"
                   initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="flex min-h-80 flex-col items-center justify-center text-center"
+                  role="status"
                 >
                   <span className="grid size-14 place-items-center rounded-full bg-accent-soft text-accent">
                     <Check className="size-7" />
                   </span>
                   <h3 className="mt-5 font-display text-2xl font-semibold tracking-tight">
-                    Message ready to send.
+                    {status === 'sent'
+                      ? 'Message sent.'
+                      : 'Message ready to send.'}
                   </h3>
                   <p className="mt-2 max-w-sm text-pretty text-muted">
-                    Your email client should have opened with the details. If it
-                    didn't, reach us directly at {site.email}.
+                    {status === 'sent'
+                      ? `Thanks — we typically reply within one business day. Need us sooner? Email ${site.email}.`
+                      : `Your email client should have opened with the details. If it didn't, reach us directly at ${site.email}.`}
                   </p>
                   <PremiumButton
                     variant="secondary"
                     className="mt-6"
-                    onClick={() => {
-                      setHoneypot('')
-                      renderedAt.current = Date.now()
-                      setSent(false)
-                    }}
+                    onClick={reset}
                   >
                     Send another
                   </PremiumButton>
@@ -255,8 +344,18 @@ export default function ContactPage() {
                     error={errors.message}
                     multiline
                   />
-                  <PremiumButton size="lg" className="mt-1 w-full">
-                    Send message
+                  {formError && (
+                    <p className="text-sm text-red-500" role="alert">
+                      {formError}
+                    </p>
+                  )}
+                  <PremiumButton
+                    type="submit"
+                    size="lg"
+                    className="mt-1 w-full"
+                    disabled={status === 'sending'}
+                  >
+                    {status === 'sending' ? 'Sending…' : 'Send message'}
                     <Send className="size-4" />
                   </PremiumButton>
                 </motion.form>

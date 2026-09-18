@@ -10,14 +10,14 @@ export function ProjectCard({ project }: { project: Project }) {
     <motion.article variants={fadeUp} className="group">
       <Link
         to={`/work/${project.slug}`}
-        className="block overflow-hidden rounded-2xl border border-border bg-surface/50 transition-all duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1 hover:border-border-strong hover:shadow-[var(--shadow-lift)]"
+        className="block overflow-hidden rounded-2xl border border-border bg-surface/50 transition-[translate,border-color,box-shadow] duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1 hover:border-border-strong hover:shadow-[var(--shadow-lift)]"
       >
         <div className="relative aspect-[16/10] overflow-hidden">
           <SmartImage
             src={project.image}
             alt={`${project.name} — ${project.tagline}`}
             tone={project.accent}
-            wrapperClassName="absolute inset-0"
+            wrapperClassName="h-full w-full"
             className="transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-black/0" />

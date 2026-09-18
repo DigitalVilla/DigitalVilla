@@ -36,15 +36,13 @@
     <meta name="twitter:image" content="https://assets.digitalvilla.ca/images/nebula-lg.jpg" />
 
     <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://assets.digitalvilla.ca" crossorigin />
-
-    <!-- PWA -->
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="Digital Villa" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <!-- Fonts and logo are needed for the first paint; fetch them before the JS asks. -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/geist-latin-wght.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin-wght.woff2" crossorigin />
+    <link rel="preload" as="image" href="/logo_DV.png" />
 
     <script type="application/ld+json">
       {
@@ -76,6 +74,30 @@
           root.style.colorScheme = theme
         } catch (e) {}
       })()
+    </script>
+
+    <!-- Earlier builds shipped a service worker. Retire it so nobody is served
+         a stale, cached copy of the site. (/sw.js is a matching kill switch for
+         browsers that still load the old shell from cache.) -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(function (regs) {
+            if (!regs.length) return
+            regs.forEach(function (r) {
+              r.unregister()
+            })
+            if ('caches' in window) {
+              caches.keys().then(function (keys) {
+                keys.forEach(function (k) {
+                  caches.delete(k)
+                })
+              })
+            }
+          })
+          .catch(function () {})
+      }
     </script>
   </head>
   <body>

@@ -1,18 +1,23 @@
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
-interface SmartImageProps
-  extends React.ImgHTMLAttributes<HTMLImageElement> {
+interface SmartImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string
   alt: string
   /** Fallback gradient color while loading / on error. */
   tone?: string
   wrapperClassName?: string
+  /**
+   * Above-the-fold images should be fetched eagerly and at high priority
+   * instead of waiting for the lazy-loading heuristics to kick in.
+   */
+  priority?: boolean
 }
 
 /**
- * Lazy, blur-up image with a graceful gradient fallback if the remote
- * asset is unavailable — keeps layouts stable and CLS at zero.
+ * Blur-up image with a graceful gradient fallback if the remote asset is
+ * unavailable — keeps layouts stable and CLS at zero. Lazy by default; pass
+ * `priority` for hero imagery.
  */
 export function SmartImage({
   src,
@@ -20,6 +25,7 @@ export function SmartImage({
   tone = 'var(--accent)',
   className,
   wrapperClassName,
+  priority = false,
   ...rest
 }: SmartImageProps) {
   const [loaded, setLoaded] = useState(false)
@@ -41,7 +47,8 @@ export function SmartImage({
         <img
           src={src}
           alt={alt}
-          loading="lazy"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchPriority={priority ? 'high' : undefined}
           decoding="async"
           onLoad={() => setLoaded(true)}
           onError={() => setErrored(true)}

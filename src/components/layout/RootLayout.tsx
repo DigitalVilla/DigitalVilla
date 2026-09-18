@@ -1,14 +1,12 @@
 import { Suspense } from 'react'
-import { useOutlet, useLocation } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
+import { Outlet, useLocation } from 'react-router-dom'
 import { GlassNavbar } from './GlassNavbar'
 import { Footer } from './Footer'
 import { PageTransition } from './PageTransition'
 import { ScrollProgress } from '@/components/ui/ScrollProgress'
 
 export function RootLayout() {
-  const outlet = useOutlet()
-  const location = useLocation()
+  const { pathname } = useLocation()
 
   return (
     <div className="relative flex min-h-dvh flex-col">
@@ -21,11 +19,17 @@ export function RootLayout() {
       <ScrollProgress />
       <GlassNavbar />
       <div id="main" className="flex-1">
-        <AnimatePresence mode="wait" initial={false}>
-          <PageTransition key={location.pathname}>
-            <Suspense fallback={<div className="min-h-dvh" />}>{outlet}</Suspense>
+        {/*
+          The Suspense boundary sits *outside* the keyed transition wrapper on
+          purpose. React Router navigates inside startTransition, so if a route
+          chunk still has to be fetched the current page stays on screen until
+          the new one is ready — instead of flashing an empty fallback.
+        */}
+        <Suspense fallback={<div className="min-h-dvh" aria-hidden />}>
+          <PageTransition key={pathname}>
+            <Outlet />
           </PageTransition>
-        </AnimatePresence>
+        </Suspense>
       </div>
       <Footer />
     </div>

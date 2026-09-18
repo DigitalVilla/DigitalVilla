@@ -18,7 +18,7 @@ export function RevealText({
   text,
   className,
   delay = 0,
-  stagger = 0.06,
+  stagger = 0.045,
   as = 'h1',
 }: RevealTextProps) {
   const words = text.split(' ')
@@ -32,7 +32,9 @@ export function RevealText({
       aria-label={text}
       variants={{
         hidden: {},
-        show: { transition: { staggerChildren: stagger, delayChildren: delay } },
+        show: {
+          transition: { staggerChildren: stagger, delayChildren: delay },
+        },
       }}
     >
       {words.map((word, i) => (
@@ -47,7 +49,7 @@ export function RevealText({
               hidden: { y: '110%' },
               show: {
                 y: 0,
-                transition: { duration: 0.9, ease: easeOutExpo },
+                transition: { duration: 0.7, ease: easeOutExpo },
               },
             }}
           >

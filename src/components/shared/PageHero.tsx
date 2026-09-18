@@ -12,7 +12,12 @@ interface PageHeroProps {
 }
 
 /** Consistent, animated hero header for interior pages. */
-export function PageHero({ eyebrow, title, description, children }: PageHeroProps) {
+export function PageHero({
+  eyebrow,
+  title,
+  description,
+  children,
+}: PageHeroProps) {
   return (
     <header className="relative overflow-hidden px-6 pt-36 pb-12 md:pt-44 md:pb-16">
       <Aurora className="opacity-60" />
@@ -21,21 +26,21 @@ export function PageHero({ eyebrow, title, description, children }: PageHeroProp
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: easeOutExpo }}
+          transition={{ duration: 0.5, ease: easeOutExpo }}
         >
           <Eyebrow>{eyebrow}</Eyebrow>
         </motion.div>
         <RevealText
           as="h1"
           text={title}
-          delay={0.1}
+          delay={0.05}
           className="mt-6 max-w-4xl font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl"
         />
         {description && (
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5, ease: easeOutExpo }}
+            transition={{ duration: 0.6, delay: 0.35, ease: easeOutExpo }}
             className="mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted"
           >
             {description}

@@ -1,22 +1,31 @@
 import { motion } from 'framer-motion'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { easeOutExpo } from '@/lib/motion'
 
-/** Wraps each route to provide a smooth enter/exit transition. */
+// The very first page shouldn't fade in on top of its own hero choreography;
+// only subsequent navigations get the enter transition.
+let hasNavigated = false
+
+/**
+ * Enter-only route transition. There is deliberately no exit animation:
+ * waiting for the old page to fade out before the new one could even start
+ * loading added close to half a second of dead time to every navigation.
+ */
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
+  const animateIn = hasNavigated
 
-  // Reset scroll position on route change.
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+    hasNavigated = true
+    window.scrollTo({ top: 0, behavior: 'instant' })
   }, [pathname])
 
   return (
     <motion.main
-      initial={{ opacity: 0, y: 12 }}
+      initial={animateIn ? { opacity: 0, y: 8 } : false}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.3, ease: easeOutExpo }}
     >
       {children}
     </motion.main>

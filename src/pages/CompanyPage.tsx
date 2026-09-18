@@ -109,8 +109,12 @@ export default function CompanyPage() {
               key={s.year}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.6, delay: (i % 3) * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              viewport={viewportOnce}
+              transition={{
+                duration: 0.6,
+                delay: (i % 3) * 0.08,
+                ease: [0.16, 1, 0.3, 1],
+              }}
               className="bg-surface/60 p-8"
             >
               <span className="font-mono text-sm font-medium text-accent">
